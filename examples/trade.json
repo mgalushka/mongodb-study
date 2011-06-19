@@ -1,0 +1,58 @@
+{
+	timestamp: ISODate("2011-06-18T13:41:46.777Z"),
+	sender: "ITRAC", 				
+	trackingId: "MG000000991",	
+	originatingSystem : {			
+		name : "SWAPSWIRE",			
+		location: "LON"				
+	},
+	book : {						
+		name : "EURO_SWAPS",		
+		location  : "LON"			
+	},
+	identifiers : [ 				
+		{
+			system : "SWAPSWIRE",	
+			id : "SW0000291_CV1",	
+			version : 3				
+		},
+		{
+			system : "ITRAC",		
+			id : "ITR020202002_1",	
+			version : 8				
+		},
+		{
+			system : "BBG-VCON",	
+			id : "BBG090998787_991",
+			version : 19			
+		},
+		{
+			system : "SUMMIT",		
+			id : "90881L",			
+			version : 5				
+		}
+	],
+	body : "<tpml>...</tpml>",
+	compressedBody : false
+}
+
+db.trades.find({originatingSystem : { $gte : {name : "ITRAC"}}})
+db.trades.find({book : { $gte : {name : "EURO_SWAPS"}}})
+
+
+db.trades.find({"originatingSystem.name" : "ITRAC", "book.name" : "EURO_SWAPS"})
+db.trades.find({"book.name" : "EURO_SWAPS", "originatingSystem.name" : "ITRAC"})
+
+
+db.trades.ensureIndex({"sender":1});
+db.trades.ensureIndex({"trackingId":1});
+db.trades.ensureIndex({"timestamp":1});
+db.trades.ensureIndex({"originatingSystem":1});
+db.trades.ensureIndex({"book":1});
+
+
+db.trades.ensureIndex({"sender":1});
+db.trades.ensureIndex({"trackingId":1});
+db.trades.ensureIndex({"timestamp":1});
+db.trades.ensureIndex({"originatingSystem.name":1});
+db.trades.ensureIndex({"book.name":1});
