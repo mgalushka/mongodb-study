@@ -1,5 +1,6 @@
-package MongoDb;
+package deprecated;
 
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
@@ -9,6 +10,7 @@ import java.util.Date;
  * @author Maxim Galushka
  * @since 18.06.11
  */
+@Deprecated
 public class Trade {
 
     private Date timestamp;
@@ -80,6 +82,21 @@ public class Trade {
         bookE.append("name", book);
         bookE.append("location", "LON");
         result.append("book", bookE);
+
+
+        BasicDBList identifiers = new BasicDBList();
+        BasicDBObject id1 = new BasicDBObject();
+        id1.append("system", "");
+        id1.append("id", "");
+        id1.append("version", 16);
+
+        BasicDBObject id2 = new BasicDBObject();
+        id2.append("system", "SUMMIT");
+        id2.append("id", "");
+        id2.append("version", 16);
+
+        identifiers.add(id1);
+        result.append("identifiers", identifiers);
 
 
         result.append("body", "<tpml>...</tpml>");
