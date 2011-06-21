@@ -1,22 +1,18 @@
-package MongoDb;
+package deprecated;
 
 import com.mongodb.Mongo;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-import com.mongodb.DBCursor;
 
 import java.net.UnknownHostException;
-import java.text.SimpleDateFormat;
 import java.util.Random;
-import java.util.Set;
 
 
 /**
  * Mongo DB Hello world!
  *
  */
+@Deprecated
 public class MongoDbApplication{
 
     private static final String[] books = {"EURO_SWAPS", "SAG_SWAPS", "LAG_SWAPS",

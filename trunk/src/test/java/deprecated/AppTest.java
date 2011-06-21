@@ -1,4 +1,4 @@
-package MongoDb;
+package deprecated;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

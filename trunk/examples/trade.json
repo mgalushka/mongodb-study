@@ -51,8 +51,19 @@ db.trades.ensureIndex({"originatingSystem":1});
 db.trades.ensureIndex({"book":1});
 
 
+ db.createCollection("trades")
+
 db.trades.ensureIndex({"sender":1});
 db.trades.ensureIndex({"trackingId":1});
 db.trades.ensureIndex({"timestamp":1});
 db.trades.ensureIndex({"originatingSystem.name":1});
 db.trades.ensureIndex({"book.name":1});
+db.trades.ensureIndex({"identifiers.system":1});
+db.trades.ensureIndex({"identifiers.id":1});
+
+
+1. trackingId contains string
+db.trades.find({"trackingId" : "/^1.*$/"})
+
+2. Exists system in list
+db.trades.find( { "identifiers.system" : {$in : "SWAPSWIRE"} } )
