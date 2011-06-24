@@ -1,0 +1,33 @@
+nodes:
+{ 
+    "_id" : NumberLong(32521222), 
+    "lat" : 54.7724042, 
+    "lon" : 83.1009863, 
+    "tags": {"amenity": "parking"} 
+}
+
+ways:
+{ 
+    "_id" : NumberLong(17237995), 
+    "nodes" : [NumberLong(178727045), NumberLong(269537100)], 
+    "tags" : { "highway" : "primary"}, 
+}
+
+relations:
+{ 
+    "_id" : NumberLong(129298), 
+    "members" : [{
+        "ref" : NumberLong(23363997),
+        "type" : "way",
+        "role" : "to"
+    }, {
+        "ref" : NumberLong(35133693),
+        "type" : "way",
+        "role" : "from"
+    }, {
+        "ref" : NumberLong(248503088),
+        "type" : "node",
+        "role" : "via"
+    }], 
+    "tags" : { "restriction" : "no_left_turn", "type" : "restriction" } 
+}
