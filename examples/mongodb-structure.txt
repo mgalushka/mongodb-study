@@ -3,7 +3,7 @@ nodes:
     "_id" : NumberLong(32521222), 
     "lat" : 54.7724042, 
     "lon" : 83.1009863, 
-    "tags": {"amenity": "parking"} 
+    "tags": [{"amenity": "parking"}, {"crossing": "traffic_signals"}]
 }
 
 ways:

@@ -11,10 +11,17 @@ import com.db.tpm.tpml.Trade;
 public interface DatabaseStorage {
 
     /**
-     * Saves trade message in database
+     * Saves object in database
      *
-     * @param trade trade to save
-     * @throws StorageException is exception occurs
+     * @param object object to save
+     * @throws StorageException if exception occurs
      */
-    public void save(Trade trade) throws StorageException;
+    public void save(Object object) throws StorageException;
+
+    /**
+     * Closes storage
+     *
+     * @throws StorageException if exception occurs
+     */
+    public void close() throws StorageException;
 }

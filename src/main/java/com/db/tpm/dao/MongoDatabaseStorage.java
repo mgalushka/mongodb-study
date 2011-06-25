@@ -1,6 +1,5 @@
 package com.db.tpm.dao;
 
-import com.db.tpm.tpml.Trade;
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
 import com.mongodb.Mongo;
@@ -18,10 +17,12 @@ public class MongoDatabaseStorage implements DatabaseStorage {
 
     public static final Logger log = Logger.getLogger(MongoDatabaseStorage.class);
 
-    private String host;
-    private int port;
+    private String host = "localhost";
+    private int port = 27017;
+    private String instance = "test";
 
-    private String instance;
+    private Mongo mongo;
+    private Datastore datastore;
 
     public MongoDatabaseStorage() {
     }
@@ -56,21 +57,31 @@ public class MongoDatabaseStorage implements DatabaseStorage {
         this.instance = instance;
     }
 
-    @Override
-    public void save(Trade trade) throws StorageException {
-        try {
-            log.trace(String.format("Connecting to MongoDB instance: %s:%d/%s",
+    private void init() throws StorageException, UnknownHostException {
+        log.trace(String.format("Connecting to MongoDB instance: %s:%d/%s",
                     host, port, instance));
 
-            Mongo m = new Mongo(host, port);
-            Datastore ds = new Morphia().createDatastore(m, instance);
+        mongo = new Mongo(host, port);
+        datastore = new Morphia().createDatastore(mongo, instance);
+    }
 
-            log.debug(String.format("Saving object: %s", trade.getTrackingId()));
-            ds.save(trade);
+    @Override
+    public void save(Object trade) throws StorageException {
+        try {
+            if(datastore == null) init();
+            //log.debug(String.format("Saving object: %s", trade.getTrackingId()));
+            datastore.save(trade);
 
         } catch (UnknownHostException e) {
             log.error(String.format("Cannot connect to %s:%d", host, port), e);
             throw new StorageException(e);
         }
+    }
+
+    @Override
+    public void close(){
+        log.trace(String.format("Closing connection to MongoDB instance: %s:%d/%s",
+                    host, port, instance));
+        mongo.close();
     }
 }
