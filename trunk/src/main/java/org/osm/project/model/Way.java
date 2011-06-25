@@ -3,38 +3,34 @@ package org.osm.project.model;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.annotations.Reference;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
- * <p></p>
- *
  * @author Maxim Galushka
- * @since 24/06/2011
+ * @since 26.06.11
  */
-@Entity(value="nodes", noClassnameStored=true)
-public class Node {
+@Entity(value="ways", noClassnameStored=true)
+public class Way {
 
     @Id
     private long id;
-    private double lat;
-    private double lon;
+
+    @Reference(ignoreMissing = true)
+    private List<Node> nodes = new ArrayList<Node>();
 
     @Embedded(concreteClass = java.util.HashMap.class)
     private Map<String,String> tags = new HashMap<String, String>();
 
-    public Node() {
+    public Way() {
     }
 
-    public Node(long id) {
+    public Way(long id) {
         this.id = id;
-    }
-
-    public Node(long id, double lat, double lon) {
-        this.id = id;
-        this.lat = lat;
-        this.lon = lon;
     }
 
     public long getId() {
@@ -45,20 +41,12 @@ public class Node {
         this.id = id;
     }
 
-    public double getLat() {
-        return lat;
+    public List<Node> getNodes() {
+        return nodes;
     }
 
-    public void setLat(double lat) {
-        this.lat = lat;
-    }
-
-    public double getLon() {
-        return lon;
-    }
-
-    public void setLon(double lon) {
-        this.lon = lon;
+    public void setNodes(List<Node> nodes) {
+        this.nodes = nodes;
     }
 
     public Map<String, String> getTags() {
@@ -69,17 +57,20 @@ public class Node {
         this.tags = tags;
     }
 
+    public void addNode(Node node){
+        nodes.add(node);
+    }
+
     public void addTag(String key, String value){
         tags.put(key, value);
     }
 
     @Override
     public String toString() {
-        return "Node{" +
+        return "Way{" +
                 "id=" + id +
-                ", lat=" + lat +
-                ", lon=" + lon +
-                (tags == null || tags.isEmpty() ? "" : ", tags=" + tags) +
+                ", nodes=" + nodes +
+                ", tags=" + tags +
                 '}';
     }
 }

@@ -16,7 +16,7 @@ import java.util.List;
  * @author Maxim Galushka
  * @since 20/06/2011
  */
-@Entity("trades")
+@Entity(value="trades", noClassnameStored=true)
 public class Trade implements Serializable {
 
     private static final long serialVersionUID = -346474186193162869L;
