@@ -1,4 +1,4 @@
-package org.openstreetview.project.model;
+package org.osm.project.model;
 
 /**
  * <p></p>
