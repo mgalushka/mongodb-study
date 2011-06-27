@@ -1,7 +1,7 @@
 package org.osm.project.xml.parsers;
 
-import org.osm.project.model.Node;
-import org.osm.project.model.Way;
+import org.osm.project.model.Member;
+import org.osm.project.model.Relation;
 
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
@@ -11,26 +11,27 @@ import javax.xml.stream.XMLStreamReader;
  * @author Maxim Galushka
  * @since 26.06.11
  */
-public class WayParser implements Parser<Way> {
+public class RelationParser implements Parser<Relation>{
 
     @Override
-    public Way parse(XMLStreamReader reader) throws ParseException{
+    public Relation parse(XMLStreamReader reader) throws ParseException {
         Long id = Long.parseLong(reader.getAttributeValue("", "id"));
 
-        Way result = new Way(id);
+        Relation result = new Relation(id);
 
         try {
             while (true) {
                 int event = reader.next();
                 if (event == XMLStreamConstants.END_ELEMENT) {
-                    if("way".equals(reader.getLocalName())){
+                    if("relation".equals(reader.getLocalName())){
                         break;
                     }
                 }
                 if (event == XMLStreamConstants.START_ELEMENT) {
-                    if("nd".equals(reader.getLocalName())){
-                        result.addNode(new Node(
-                                Long.parseLong(reader.getAttributeValue("", "ref"))));
+                    if("member".equals(reader.getLocalName())){
+                        result.addMember(new Member(
+                                Long.parseLong(reader.getAttributeValue("", "ref")),
+                                reader.getAttributeValue("", "role")));
                     }
                     if("tag".equals(reader.getLocalName())){
                         if("tag".equals(reader.getLocalName())){

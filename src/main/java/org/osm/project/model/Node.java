@@ -3,8 +3,9 @@ package org.osm.project.model;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.annotations.Indexed;
+import com.google.code.morphia.utils.IndexDirection;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -14,15 +15,14 @@ import java.util.Map;
  * @since 24/06/2011
  */
 @Entity(value="nodes", noClassnameStored=true)
-public class Node {
+public class Node extends Taggable{
 
     @Id
     private long id;
-    private double lat;
-    private double lon;
 
-    @Embedded(concreteClass = java.util.HashMap.class)
-    private Map<String,String> tags = new HashMap<String, String>();
+    @Indexed(value = IndexDirection.GEO2D)
+    @Embedded
+    private Location location;
 
     public Node() {
     }
@@ -33,8 +33,8 @@ public class Node {
 
     public Node(long id, double lat, double lon) {
         this.id = id;
-        this.lat = lat;
-        this.lon = lon;
+        this.location.setLat(lat);
+        this.location.setLon(lon);
     }
 
     public long getId() {
@@ -46,39 +46,35 @@ public class Node {
     }
 
     public double getLat() {
-        return lat;
+        return this.location.getLat();
     }
 
     public void setLat(double lat) {
-        this.lat = lat;
+        this.location.setLat(lat);
     }
 
     public double getLon() {
-        return lon;
+        return this.location.getLon();
     }
 
     public void setLon(double lon) {
-        this.lon = lon;
+        this.location.setLon(lon);
     }
 
-    public Map<String, String> getTags() {
-        return tags;
+    public Location getLocation() {
+        return location;
     }
 
-    public void setTags(Map<String, String> tags) {
-        this.tags = tags;
-    }
-
-    public void addTag(String key, String value){
-        tags.put(key, value);
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     @Override
     public String toString() {
+        Map tags = getTags();
         return "Node{" +
                 "id=" + id +
-                ", lat=" + lat +
-                ", lon=" + lon +
+                ", location=" + location +
                 (tags == null || tags.isEmpty() ? "" : ", tags=" + tags) +
                 '}';
     }

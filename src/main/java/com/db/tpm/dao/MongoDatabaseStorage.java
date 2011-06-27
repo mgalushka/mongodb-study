@@ -63,6 +63,7 @@ public class MongoDatabaseStorage implements DatabaseStorage {
 
         mongo = new Mongo(host, port);
         datastore = new Morphia().createDatastore(mongo, instance);
+        datastore.ensureIndexes();
     }
 
     @Override

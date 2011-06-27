@@ -6,6 +6,7 @@ import com.db.tpm.dao.MongoDatabaseStorage;
 import com.db.tpm.dao.StorageException;
 import org.osm.project.model.Node;
 import org.osm.project.xml.parsers.NodeParser;
+import org.osm.project.xml.parsers.RelationParser;
 import org.osm.project.xml.parsers.WayParser;
 
 import javax.xml.stream.XMLInputFactory;
@@ -51,6 +52,9 @@ public class ModelBuilder {
                 }
                 if("way".equals(reader.getLocalName())){
                     ds.save(new WayParser().parse(reader));
+                }
+                if("relation".equals(reader.getLocalName())){
+                    ds.save(new RelationParser().parse(reader));
                 }
             }
         }
