@@ -1,11 +1,11 @@
 package org.osm.project.model;
 
+import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
-import com.google.code.morphia.annotations.Indexed;
-import com.google.code.morphia.annotations.Reference;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,20 +13,19 @@ import java.util.Map;
  * @author Maxim Galushka
  * @since 26.06.11
  */
-@Entity(value="ways", noClassnameStored=true)
-public class Way extends Taggable{
+@Entity(value="relations", noClassnameStored=true)
+public class Relation extends Taggable{
 
     @Id
     private long id;
 
-    @Reference(ignoreMissing = true)
-    @Indexed
-    private List<Node> nodes = new ArrayList<Node>();
+    @Embedded
+    private List<Member> members = new ArrayList<Member>();
 
-    public Way() {
+    public Relation() {
     }
 
-    public Way(long id) {
+    public Relation(long id) {
         this.id = id;
     }
 
@@ -38,24 +37,24 @@ public class Way extends Taggable{
         this.id = id;
     }
 
-    public List<Node> getNodes() {
-        return nodes;
+    public List<Member> getMembers() {
+        return members;
     }
 
-    public void setNodes(List<Node> nodes) {
-        this.nodes = nodes;
+    public void setMembers(List<Member> members) {
+        this.members = members;
     }
 
-    public void addNode(Node node){
-        nodes.add(node);
+    public void addMember(Member member) {
+        this.members.add(member);
     }
 
     @Override
     public String toString() {
         Map tags = getTags();
-        return "Way{" +
+        return "Relation{" +
                 "id=" + id +
-                ", nodes=" + nodes +
+                ", members=" + members +
                 (tags == null || tags.isEmpty() ? "" : ", tags=" + tags) +
                 '}';
     }
