@@ -12,7 +12,9 @@ import org.osm.project.xml.renderers.RenderException;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Maxim Galushka
@@ -22,7 +24,7 @@ public class Export {
 
     public static void main(String[] args) throws RenderException, StorageException {
         ModelRenderer mr = new ModelRenderer();
-        File output = new File("E:\\Projects\\Eclipse\\mongodb-study\\examples\\out-test.osm");
+        File output = new File("E:\\Projects\\mongodb-study\\examples\\out-test.osm");
 
         DatabaseStorage ds = new MongoDatabaseStorage();
         Datastore mongo = ds.getDatastore();
@@ -30,7 +32,12 @@ public class Export {
         List<Entity> forExport = new ArrayList<Entity>();
 
         List<Node> busStops = mongo.find(Node.class, "tags.highway", "bus_stop").asList();
-        List<Way> busWays = mongo.createQuery(Way.class).field("tags.highway").exists().limit(1000).asList();
+
+        Set<Way> busWays = new HashSet<Way>();
+        for(Node n : busStops){
+            busWays.addAll(mongo.createQuery(Way.class).criteria("nodes.$ref").equal(n.getId()));
+        }
+
 
         forExport.addAll(busStops);
         forExport.addAll(busWays);
