@@ -16,14 +16,17 @@ public class Member {
     @Indexed
     private long ref;
 
+    private String type;
+
     @Indexed
     private String role;
 
     public Member() {
     }
 
-    public Member(long ref, String role) {
+    public Member(long ref, String type, String role) {
         this.ref = ref;
+        this.type = type;
         this.role = role;
     }
 
@@ -43,11 +46,20 @@ public class Member {
         this.role = role;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         return "Member{" +
                 "ref=" + ref +
+                ", type='" + type + '\'' +
                 ", role='" + role + '\'' +
-                '}';
+                "}\n";
     }
 }

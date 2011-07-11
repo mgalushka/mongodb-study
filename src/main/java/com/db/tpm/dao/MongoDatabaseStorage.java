@@ -63,7 +63,7 @@ public class MongoDatabaseStorage implements DatabaseStorage {
 
         mongo = new Mongo(host, port);
         datastore = new Morphia().createDatastore(mongo, instance);
-        datastore.ensureIndexes();
+        //datastore.ensureIndexes();
     }
 
     @Override
@@ -84,5 +84,16 @@ public class MongoDatabaseStorage implements DatabaseStorage {
         log.trace(String.format("Closing connection to MongoDB instance: %s:%d/%s",
                     host, port, instance));
         mongo.close();
+    }
+
+    @Override
+    public Datastore getDatastore() throws StorageException {
+        try {
+            if(datastore == null) init();
+        } catch (UnknownHostException e) {
+            log.error(String.format("Cannot connect to %s:%d", host, port), e);
+            throw new StorageException(e);
+        }
+        return datastore;
     }
 }

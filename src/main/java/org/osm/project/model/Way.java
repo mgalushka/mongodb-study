@@ -19,7 +19,8 @@ public class Way extends Taggable{
     @Id
     private long id;
 
-    @Reference(ignoreMissing = true)
+    // TODO: to investigate if we require lazy loading here
+    @Reference(ignoreMissing = true/*, lazy = true*/)
     @Indexed
     private List<Node> nodes = new ArrayList<Node>();
 
@@ -30,10 +31,12 @@ public class Way extends Taggable{
         this.id = id;
     }
 
+    @Override
     public long getId() {
         return id;
     }
 
+    @Override
     public void setId(long id) {
         this.id = id;
     }
@@ -51,12 +54,29 @@ public class Way extends Taggable{
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Way way = (Way) o;
+
+        if (id != way.id) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (id ^ (id >>> 32));
+    }
+
+    @Override
     public String toString() {
         Map tags = getTags();
         return "Way{" +
                 "id=" + id +
                 ", nodes=" + nodes +
                 (tags == null || tags.isEmpty() ? "" : ", tags=" + tags) +
-                '}';
+                "}\n";
     }
 }

@@ -1,6 +1,7 @@
 package com.db.tpm.dao;
 
 import com.db.tpm.tpml.Trade;
+import com.google.code.morphia.Datastore;
 
 /**
  * <p></p>
@@ -24,4 +25,10 @@ public interface DatabaseStorage {
      * @throws StorageException if exception occurs
      */
     public void close() throws StorageException;
+
+    /**
+     * @return datastore object for search purposes
+     * @throws StorageException if exception occurs
+     */
+    public Datastore getDatastore() throws StorageException;
 }

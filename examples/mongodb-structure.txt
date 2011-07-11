@@ -3,14 +3,21 @@ nodes:
     "_id" : NumberLong(32521222), 
     "lat" : 54.7724042, 
     "lon" : 83.1009863, 
-    "tags": [{"amenity": "parking"}, {"crossing": "traffic_signals"}]
+    "tags": {"amenity": "parking", "crossing": "traffic_signals"}
 }
 
 ways:
 { 
     "_id" : NumberLong(17237995), 
-    "nodes" : [NumberLong(178727045), NumberLong(269537100)], 
-    "tags" : { "highway" : "primary"}, 
+    "nodes" : [{
+		"$ref" : "nodes",
+		"$id" : NumberLong(302054146)
+	},
+	{
+		"$ref" : "nodes",
+		"$id" : NumberLong(302054148)
+	}],
+    "tags" : { "highway" : "primary"}
 }
 
 relations:

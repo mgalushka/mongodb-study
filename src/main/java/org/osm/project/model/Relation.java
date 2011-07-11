@@ -29,10 +29,12 @@ public class Relation extends Taggable{
         this.id = id;
     }
 
+    @Override
     public long getId() {
         return id;
     }
 
+    @Override
     public void setId(long id) {
         this.id = id;
     }
@@ -50,12 +52,29 @@ public class Relation extends Taggable{
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Relation relation = (Relation) o;
+
+        if (id != relation.id) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (id ^ (id >>> 32));
+    }
+
+    @Override
     public String toString() {
         Map tags = getTags();
         return "Relation{" +
                 "id=" + id +
                 ", members=" + members +
                 (tags == null || tags.isEmpty() ? "" : ", tags=" + tags) +
-                '}';
+                "}\n";
     }
 }
