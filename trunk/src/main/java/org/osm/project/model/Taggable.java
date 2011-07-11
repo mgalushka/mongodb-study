@@ -10,7 +10,7 @@ import java.util.Map;
  * @author Maxim Galushka
  * @since 26.06.11
  */
-public abstract class Taggable {
+public abstract class Taggable implements Entity{
 
     @Embedded(concreteClass = java.util.HashMap.class)
     private Map<String,String> tags = new HashMap<String, String>();

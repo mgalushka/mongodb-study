@@ -22,7 +22,7 @@ public class Node extends Taggable{
 
     @Indexed(value = IndexDirection.GEO2D)
     @Embedded
-    private Location location;
+    private Location location = new Location();
 
     public Node() {
     }
@@ -37,10 +37,12 @@ public class Node extends Taggable{
         this.location.setLon(lon);
     }
 
+    @Override
     public long getId() {
         return id;
     }
 
+    @Override
     public void setId(long id) {
         this.id = id;
     }
@@ -70,12 +72,29 @@ public class Node extends Taggable{
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Node node = (Node) o;
+
+        if (id != node.id) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (id ^ (id >>> 32));
+    }
+
+    @Override
     public String toString() {
         Map tags = getTags();
         return "Node{" +
                 "id=" + id +
                 ", location=" + location +
                 (tags == null || tags.isEmpty() ? "" : ", tags=" + tags) +
-                '}';
+                "}\n";
     }
 }

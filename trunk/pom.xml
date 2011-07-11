@@ -37,6 +37,24 @@
             <version>1.2.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>net.sourceforge.travelingsales</groupId>
+            <artifactId>travelingSalesman</artifactId>
+            <version>2.5.2-RC1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sourceforge.travelingsales</groupId>
+            <artifactId>libosm</artifactId>
+            <version>2.5.2-RC1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sourceforge.travelingsales</groupId>
+            <artifactId>osmnavigation</artifactId>
+            <version>2.5.2-RC1-SNAPSHOT</version>
+        </dependency>
+
         <!--Optional Jars (for certain features) but required by maven for bulding. -->
         <dependency>
             <groupId>cglib</groupId>

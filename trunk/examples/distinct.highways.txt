@@ -1,0 +1,23 @@
+> db.ways.distinct("tags.highway")
+[
+        "primary",
+        "residential",
+        "steps",
+        "footway",
+        "service",
+        "trunk_link",
+        "trunk",
+        "unclassified",
+        "tertiary",
+        "secondary",
+        "living_street",
+        "primary_link",
+        "pedestrian",
+        "secondary_link",
+        "living_street;residential",
+        "road",
+        "construction",
+        "path",
+        "cycleway",
+        "track"
+]

@@ -4,7 +4,6 @@ package org.osm.project.xml;
 import com.db.tpm.dao.DatabaseStorage;
 import com.db.tpm.dao.MongoDatabaseStorage;
 import com.db.tpm.dao.StorageException;
-import org.osm.project.model.Node;
 import org.osm.project.xml.parsers.NodeParser;
 import org.osm.project.xml.parsers.RelationParser;
 import org.osm.project.xml.parsers.WayParser;

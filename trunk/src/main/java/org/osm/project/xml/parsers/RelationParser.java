@@ -31,6 +31,7 @@ public class RelationParser implements Parser<Relation>{
                     if("member".equals(reader.getLocalName())){
                         result.addMember(new Member(
                                 Long.parseLong(reader.getAttributeValue("", "ref")),
+                                reader.getAttributeValue("", "type"),
                                 reader.getAttributeValue("", "role")));
                     }
                     if("tag".equals(reader.getLocalName())){
