@@ -62,9 +62,9 @@
         </dependency>
 
         <dependency>
-          <groupId>org.apache.commons</groupId>
-          <artifactId>com.springsource.org.apache.commons.collections</artifactId>
-          <version>3.2.1</version>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.2.1</version>
         </dependency>
 
         <!--Optional Jars (for certain features) but required by maven for bulding. -->
@@ -141,11 +141,11 @@
             <name>Codehaus ProxyToys Repository</name>
             <url>dav:https://dav.codehaus.org/repository/proxytoys</url>
         </repository>
-        <repository>
+        <!--<repository>
             <id>DB SpringSource Bundles External</id>
             <name>SpringSource Bundles External</name>
             <url>http://cu011.cubit.dbcde.com/content/repositories/springsource-bundles-external/</url>
-        </repository>
+        </repository>-->
 
     </repositories>
 </project>
