@@ -43,9 +43,9 @@ public class StreetsPlaying {
         DBCollection relations = db.getCollection("relations");
         streets.addAll(relations.distinct("tags.addr:street"));
 
-        //System.out.printf("Streets: %s\n", streets);
+        System.out.printf("Streets: %s\n", streets);
 
-        final String street = "Ëåñ³ Óêğà¿íêè áóëüâàğ";
+        final String street = "Ğ›ĞµÑÑ– Ğ£ĞºÑ€Ğ°Ñ—Ğ½ĞºĞ¸ Ğ±ÑƒĞ»ÑŒĞ²Ğ°Ñ€";
         System.out.printf("Nodes: %s\n", ds.getDatastore().find(Node.class).field("tags.addr:street").equal(street).asList());
         System.out.printf("Ways: %s\n", ds.getDatastore().find(Way.class).field("tags.addr:street").equal(street).asList());
 
