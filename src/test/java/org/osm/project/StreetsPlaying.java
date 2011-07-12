@@ -3,6 +3,7 @@ package org.osm.project;
 import com.db.tpm.dao.DatabaseStorage;
 import com.db.tpm.dao.MongoDatabaseStorage;
 import com.db.tpm.dao.StorageException;
+import com.google.code.morphia.query.Query;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.Mongo;
@@ -14,9 +15,7 @@ import org.osm.project.model.Node;
 import org.osm.project.model.Relation;
 import org.osm.project.model.Way;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Maxim Galushka
@@ -32,7 +31,7 @@ public class StreetsPlaying {
         Mongo mongo = ds.getDatastore().getMongo();
         DB db = mongo.getDB("test");
 
-        HashSet<String> streets = new HashSet<String>();
+        final List<String> streets = new ArrayList<String>();
 
         DBCollection nodes = db.getCollection("nodes");
         streets.addAll(nodes.distinct("tags.addr:street"));
@@ -43,19 +42,32 @@ public class StreetsPlaying {
         DBCollection relations = db.getCollection("relations");
         streets.addAll(relations.distinct("tags.addr:street"));
 
+        Query waysQuery = ds.getDatastore().find(Way.class);
+        waysQuery.field("tags.highway").exists();
+        waysQuery.field("tags.name").exists();
+
+        CollectionUtils.forAllDo(waysQuery.asList(), new Closure() {
+            @Override
+            public void execute(Object o) {
+                streets.add(((Way) o).getTags().get("name"));
+            }
+        });
+
+        Collections.sort(streets);
         System.out.printf("Streets: %s\n", streets);
 
-        final String street = "Лесі Українки бульвар";
-        System.out.printf("Nodes: %s\n", ds.getDatastore().find(Node.class).field("tags.addr:street").equal(street).asList());
-        System.out.printf("Ways: %s\n", ds.getDatastore().find(Way.class).field("tags.addr:street").equal(street).asList());
-
-        Relation rel = ds.getDatastore().find(Relation.class).field("tags.addr:street").equal(street).get();
+//        final String street = "Лесі Українки бульвар";
+//        System.out.printf("Nodes: %s\n", ds.getDatastore().find(Node.class).field("tags.addr:street").equal(street).asList());
+//        System.out.printf("Ways: %s\n", ds.getDatastore().find(Way.class).field("tags.addr:street").equal(street).asList());
+//
+//        Relation rel = ds.getDatastore().find(Relation.class).field("tags.addr:street").equal(street).get();
 //        System.out.printf("Relations: %s\n", rel);
 
         // all relations with role=street
         //System.out.printf("role=street: %s\n", ds.getDatastore().find(Relation.class).field("members.role").equal("street").asList());
 
         // filter out only street relations
+        /*
         CollectionUtils.filter(rel.getMembers(), new Predicate() {
             @Override
             public boolean evaluate(Object o) {
@@ -87,5 +99,6 @@ public class StreetsPlaying {
 //        }
 //        System.out.printf("Distinct roles: %s\n", rolesForStreet);
 
+*/
     }
 }

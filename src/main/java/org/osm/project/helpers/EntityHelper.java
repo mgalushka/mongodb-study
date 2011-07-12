@@ -37,25 +37,34 @@ public class EntityHelper extends MongoHelper{
 
     public Collection<Way> getRelationWays(Relation relation){
         final Collection<Way> output = new HashSet<Way>();
-        CollectionUtils.forAllDo(relation.getMembers(), new Closure() {
-            @Override
-            public void execute(Object o) {
-                Member m = (Member) o;
+        for(Member m : relation.getMembers()){
+            if("way".equals(m.getRole())){
                 output.add(mongo.createQuery(Way.class).filter("_id", m.getRef()).get());
             }
-        });
+        }
         return output;
     }
 
     public Collection<Node> getRelationNodes(Relation relation){
         final Collection<Node> output = new HashSet<Node>();
-        CollectionUtils.forAllDo(relation.getMembers(), new Closure() {
-            @Override
-            public void execute(Object o) {
-                Member m = (Member) o;
+        for(Member m : relation.getMembers()){
+            if("node".equals(m.getRole())){
                 output.add(mongo.createQuery(Node.class).filter("_id", m.getRef()).get());
             }
-        });
+        }
+        return output;
+    }
+
+    public Collection<Entity> getRelationEntities(Relation relation){
+        final Collection<Entity> output = new HashSet<Entity>();
+        for(Member m : relation.getMembers()){
+            if("way".equals(m.getRole())){
+                output.add(mongo.createQuery(Way.class).filter("_id", m.getRef()).get());
+            }
+            if("node".equals(m.getRole())){
+                output.add(mongo.createQuery(Node.class).filter("_id", m.getRef()).get());
+            }
+        }
         return output;
     }
 
