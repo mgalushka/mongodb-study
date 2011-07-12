@@ -22,6 +22,7 @@ import java.util.Set;
  */
 public class Export {
 
+
     public static void main(String[] args) throws RenderException, StorageException {
         ModelRenderer mr = new ModelRenderer();
         File output = new File("E:\\Projects\\mongodb-study\\examples\\out-test.osm");
@@ -35,9 +36,8 @@ public class Export {
 
         Set<Way> busWays = new HashSet<Way>();
         for(Node n : busStops){
-            busWays.addAll(mongo.createQuery(Way.class).criteria("nodes.$ref").equal(n.getId()));
+            busWays.addAll(mongo.createQuery(Way.class).disableValidation().filter("nodes.$id", n.getId()).asList());
         }
-
 
         forExport.addAll(busStops);
         forExport.addAll(busWays);
