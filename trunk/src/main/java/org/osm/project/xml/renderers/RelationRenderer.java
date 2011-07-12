@@ -20,6 +20,7 @@ public class RelationRenderer implements Renderer<Relation> {
             String id = Long.toString(model.getId());
             writer.writeAttribute("id", id);
             writer.writeAttribute("visible", "true");
+            writer.writeAttribute("version", "1");
 
             MemberRenderer mr = new MemberRenderer();
             for(Member member : model.getMembers()){
