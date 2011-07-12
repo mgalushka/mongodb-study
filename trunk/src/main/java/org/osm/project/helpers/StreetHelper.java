@@ -4,13 +4,11 @@ import com.db.tpm.dao.DatabaseStorage;
 import com.db.tpm.dao.MongoDatabaseStorage;
 import com.db.tpm.dao.StorageException;
 import com.google.code.morphia.Datastore;
+import com.google.code.morphia.query.Query;
 import com.mongodb.Mongo;
 import org.apache.commons.collections.Closure;
 import org.apache.commons.collections.CollectionUtils;
-import org.osm.project.model.Entity;
-import org.osm.project.model.Node;
-import org.osm.project.model.Relation;
-import org.osm.project.model.Way;
+import org.osm.project.model.*;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -39,42 +37,68 @@ public class StreetHelper extends MongoHelper{
      * @throws com.db.tpm.dao.StorageException is exception
      */
     public Collection<Entity> findStreet(String name) throws StorageException {
-        final Set<Node> nodes = new HashSet<Node>();
-        final Set<Way> ways = new HashSet<Way>();
-        final Set<Relation> relations = new HashSet<Relation>();
+        final Set<Entity> street = new HashSet<Entity>();
 
         // relations
-        relations.addAll(mongo.find(Relation.class).field("tags.addr:street").equal(name).asList());
-        CollectionUtils.forAllDo(relations, new Closure() {
-            @Override
-            public void execute(Object o) {
-                ways.addAll(entityHelper.getRelationWays((Relation) o));
-            }
-        });
-        CollectionUtils.forAllDo(relations, new Closure() {
-            @Override
-            public void execute(Object o) {
-                nodes.addAll(entityHelper.getRelationNodes((Relation) o));
-            }
-        });
+        List<Relation> relations = mongo.find(Relation.class).field("tags.addr:street").equal(name).asList();
+
+        Query<Relation> byType = mongo.createQuery(Relation.class);
+        byType.or(
+                byType.criteria("tags.type").equal("street"),
+                byType.criteria("tags.type").equal("associatedStreet")
+        );
+        relations.addAll(byType.asList());
+
+        street.addAll(relations);
+        for(Relation r : relations){
+            street.addAll(findStreet(r));
+        }
 
         // ways
+        Set<Way> ways = new HashSet<Way>();
         ways.addAll(mongo.find(Way.class).field("tags.addr:street").equal(name).asList());
-        CollectionUtils.forAllDo(ways, new Closure() {
-            @Override
-            public void execute(Object o) {
-                nodes.addAll(((Way)o).getNodes());
-            }
-        });
+
+        Query waysQuery = mongo.find(Way.class);
+        waysQuery.or(
+                byType.criteria("tags.highway").exists(),
+                byType.criteria("tags.living_street").exists()
+        );
+        waysQuery.field("tags.name").equal(name);
+
+        ways.addAll(waysQuery.asList());
+
+        for(Way w : ways){
+            street.addAll(w.getNodes());
+        }
+
+        street.addAll(ways);
 
         // nodes
-        nodes.addAll(mongo.find(Node.class).field("tags.addr:street").equal(name).asList());
+        street.addAll(mongo.find(Node.class).field("tags.addr:street").equal(name).asList());
+        return street;
+    }
+
+    /**
+     * Find all street objects related to current relation
+     * @param relation relation
+     * @return all street objects
+     * @throws StorageException is exception
+     */
+    public Collection<Entity> findStreet(Relation relation) throws StorageException {
+        final Set<Node> nodes = new HashSet<Node>();
+        final Set<Way> ways = new HashSet<Way>();
+
+        nodes.addAll(entityHelper.getRelationNodes(relation));
+        ways.addAll(entityHelper.getRelationWays(relation));
+
+        for(Way w : ways) {
+            nodes.addAll(w.getNodes());
+        }
 
         Set<Entity> all = new HashSet<Entity>();
         all.addAll(nodes);
         all.addAll(ways);
-        all.addAll(relations);
-
         return all;
     }
+
 }
