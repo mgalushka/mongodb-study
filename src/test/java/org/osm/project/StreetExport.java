@@ -1,14 +1,19 @@
 package org.osm.project;
 
+import com.db.tpm.dao.DatabaseStorage;
+import com.db.tpm.dao.MongoDatabaseStorage;
 import com.db.tpm.dao.StorageException;
+import com.google.code.morphia.Datastore;
 import org.osm.project.helpers.StreetHelper;
 import org.osm.project.model.Entity;
+import org.osm.project.model.Node;
 import org.osm.project.xml.ModelRenderer;
 import org.osm.project.xml.renderers.RenderException;
 
 import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * <p></p>
@@ -23,7 +28,7 @@ public class StreetExport {
 
     public static void main(String[] args) throws StorageException, RenderException {
         ModelRenderer mr = new ModelRenderer();
-        File output = new File("E:\\Projects\\Eclipse\\mongodb-study\\examples\\out-street-test.osm");
+        File output = new File("E:\\Projects\\mongodb-study\\examples\\out-street-test.osm");
 
         StreetHelper sh = new StreetHelper();
 
@@ -31,7 +36,15 @@ public class StreetExport {
         streets.addAll(sh.findStreet("Возз'єднання проспект"));
         streets.addAll(sh.findStreet("Возз’єднання проспект"));
         streets.addAll(sh.findStreet("Соборності проспект"));
-        //streets.addAll(sh.findStreet("Березняківска вулиця"));
+        streets.addAll(sh.findStreet("Березняківска вулиця"));
+        streets.addAll(sh.findStreet("Березняковская"));
+
+
+        DatabaseStorage ds = new MongoDatabaseStorage();
+        Datastore mongo = ds.getDatastore();
+
+//        List<Node> busStops = mongo.find(Node.class, "tags.highway", "bus_stop").limit(1).asList();
+        streets.addAll(mongo.find(Node.class, "tags.highway", "bus_stop").asList());
 
         mr.buildOsm(streets, output);
     }
