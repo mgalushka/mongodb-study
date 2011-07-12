@@ -3,9 +3,12 @@ package org.osm.project;
 import com.db.tpm.dao.DatabaseStorage;
 import com.db.tpm.dao.MongoDatabaseStorage;
 import com.db.tpm.dao.StorageException;
-import com.mongodb.DB;
-import com.mongodb.Mongo;
+import com.google.code.morphia.Datastore;
+import org.osm.project.model.Node;
+import org.osm.project.model.Relation;
 import org.osm.project.model.Way;
+
+import java.util.List;
 
 /**
  * @author Maxim Galushka
@@ -13,14 +16,17 @@ import org.osm.project.model.Way;
  */
 public class WaysMemoryCacheTesting {
 
+    /*
+     * -Xmx512m is OK
+     */
     public static void main(String[] args) throws StorageException {
         final DatabaseStorage ds = new MongoDatabaseStorage();
 
-        Mongo mongo = ds.getDatastore().getMongo();
-        DB db = mongo.getDB("test");
+        Datastore mongo = ds.getDatastore();
 
-        Listmongo.createQuery(Way.class).asList();
-
-
+        // full dump in memory
+        List<Way> allWays = mongo.find(Way.class).asList();
+        List<Node> allNodes = mongo.find(Node.class).asList();
+        List<Relation> allRelations = mongo.find(Relation.class).asList();
     }
 }
