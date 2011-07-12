@@ -38,7 +38,7 @@ public class Export {
 
     public static void main(String[] args) throws RenderException, StorageException {
         ModelRenderer mr = new ModelRenderer();
-        File output = new File("E:\\Projects\\mongodb-study\\examples\\out-test.osm");
+        File output = new File("E:\\Projects\\Eclipse\\mongodb-study\\examples\\out-test.osm");
 
         DatabaseStorage ds = new MongoDatabaseStorage();
         Datastore mongo = ds.getDatastore();
@@ -49,6 +49,8 @@ public class Export {
         List<Node> busStops = mongo.find(Node.class, "tags.highway", "bus_stop").asList();
         printEllapsed("Found all bus stops");
 
+        Set<Relation> busRelations = new HashSet<Relation>();
+
         // find all ways for all stops
         Set<Way> busWays = new HashSet<Way>();
         for(Node n : busStops){
@@ -57,8 +59,14 @@ public class Export {
         }
         printEllapsed("Found ways for all bus stops");
 
+        // find all relations for all stops
+        for(Node n : busStops){
+            busRelations.addAll(mongo.createQuery(Relation.class).disableValidation()
+                    .filter("member.ref", n.getId()).asList());
+        }
+        printEllapsed("Found relations for all bus stops");
+
         // find all relations for all ways found and adding them to map too
-        Set<Relation> busWaysRelations = new HashSet<Relation>();
         for(Way w : busWays){
             Query<Relation> allBusRelations = mongo.createQuery(Relation.class).disableValidation();
             allBusRelations.criteria("members.ref").equal(w.getId()).and()
@@ -67,26 +75,26 @@ public class Export {
                         allBusRelations.criteria("tags.type").equal("street")
                     );
 
-            busWaysRelations.addAll(allBusRelations.asList());
+            busRelations.addAll(allBusRelations.asList());
         }
-        printEllapsed("Found relations for all bus stops ways");
+        printEllapsed("Found relations for all ways");
 
-        for(Node n : busStops){
-            Query<Relation> allBusStopsRelations = mongo.createQuery(Relation.class).disableValidation();
-            allBusStopsRelations.criteria("members.ref").equal(n.getId()).and()
-                    .or(
-                        allBusStopsRelations.criteria("tags.type").equal("associatedStreet"),
-                        allBusStopsRelations.criteria("tags.type").equal("street")
-                    );
-
-            busWaysRelations.addAll(allBusStopsRelations.asList());
-        }
-        printEllapsed("Found relations for all bus stop nodes");
+//        for(Node n : busStops){
+//            Query<Relation> allBusStopsRelations = mongo.createQuery(Relation.class).disableValidation();
+//            allBusStopsRelations.criteria("members.ref").equal(n.getId()).and()
+//                    .or(
+//                        allBusStopsRelations.criteria("tags.type").equal("associatedStreet"),
+//                        allBusStopsRelations.criteria("tags.type").equal("street")
+//                    );
+//
+//            busRelations.addAll(allBusStopsRelations.asList());
+//        }
+//        printEllapsed("Found relations for all bus stops");
 
 
         forExport.addAll(busStops);
         forExport.addAll(busWays);
-        forExport.addAll(busWaysRelations);
+        forExport.addAll(busRelations);
 
         mr.buildOsm(forExport, output);
         printEllapsed("Exported");

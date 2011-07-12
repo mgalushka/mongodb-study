@@ -12,6 +12,7 @@ public class RendererFactory {
         if(model instanceof Node) return new NodeRenderer();
         if(model instanceof Way) return new WayRenderer();
         if(model instanceof Relation) return new RelationRenderer();
-        throw new RuntimeException("Cannot create renderer");
+        throw new RuntimeException(
+                String.format("Cannot create renderer for class: %s", model.getClass()));
     }
 }

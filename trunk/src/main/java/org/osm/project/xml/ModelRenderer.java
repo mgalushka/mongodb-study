@@ -13,7 +13,7 @@ import javax.xml.stream.XMLStreamWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * Used for creating osm xml files build from domain model
@@ -35,7 +35,7 @@ public class ModelRenderer {
     }
 
     @SuppressWarnings("unchecked")
-    public void buildOsm(List<? extends Entity> model, File output) throws RenderException {
+    public void buildOsm(Collection<? extends Entity> model, File output) throws RenderException {
         try {
             final XMLStreamWriter xmlw = getWriter(output);
             xmlw.writeStartDocument();
@@ -55,6 +55,7 @@ public class ModelRenderer {
             CollectionUtils.forAllDo(model, new Closure() {
                 @Override
                 public void execute(Object input) {
+                    if(input == null) return;
                     Entity model = (Entity) input;
                     Renderer r = rf.getRenderer(model);
                     try {
