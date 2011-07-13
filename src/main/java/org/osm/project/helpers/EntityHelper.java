@@ -1,12 +1,14 @@
 package org.osm.project.helpers;
 
 import com.db.tpm.dao.StorageException;
+import com.google.code.morphia.query.Query;
 import org.apache.commons.collections.Closure;
 import org.apache.commons.collections.CollectionUtils;
 import org.osm.project.model.*;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p></p>
@@ -33,6 +35,25 @@ public class EntityHelper extends MongoHelper{
     public Collection<Relation> findRelationsForWay(Way way){
         return mongo.createQuery(Relation.class).disableValidation()
                             .filter("members.ref", way.getId()).asList();
+    }
+
+    public Collection<Node> findNearestBusStopsForWay(Way way){
+        Set<Node> nearestBusStops = new HashSet<Node>();
+        for(Node n : way.getNodes()){
+            if("bus_stop".equals(n.getTags().get("highway"))){
+                nearestBusStops.add(n);
+            }
+            else{
+                Query<Node> nearestQuery = mongo.createQuery(Node.class).disableValidation();
+                nearestQuery.and(
+                        nearestQuery.criteria("location").near(n.getLat(), n.getLon()),
+                        nearestQuery.criteria("tags.highway").equal("bus_stop")
+                        );
+                // TODO: limit=5 is test parameter and can be optimized
+                nearestBusStops.addAll(nearestQuery.limit(5).asList());
+            }
+        }
+        return nearestBusStops;
     }
 
     public Collection<Way> getRelationWays(Relation relation){

@@ -1,13 +1,7 @@
 package org.osm.project.helpers;
 
-import com.db.tpm.dao.DatabaseStorage;
-import com.db.tpm.dao.MongoDatabaseStorage;
 import com.db.tpm.dao.StorageException;
-import com.google.code.morphia.Datastore;
 import com.google.code.morphia.query.Query;
-import com.mongodb.Mongo;
-import org.apache.commons.collections.Closure;
-import org.apache.commons.collections.CollectionUtils;
 import org.osm.project.model.*;
 
 import java.util.Collection;
@@ -75,6 +69,11 @@ public class StreetHelper extends MongoHelper{
 
         // nodes
         street.addAll(mongo.find(Node.class).field("tags.addr:street").equal(name).asList());
+        for(Way w : ways){
+            if(w.getTags().containsKey("highway")){
+                street.addAll(entityHelper.findNearestBusStopsForWay(w));
+            }
+        }
         return street;
     }
 
