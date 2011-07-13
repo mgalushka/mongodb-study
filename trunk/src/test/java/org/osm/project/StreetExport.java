@@ -24,12 +24,14 @@ import java.util.List;
 public class StreetExport {
 
 //    public static final String STREET = "Лесі Українки бульвар";
+
+    private static final String DEFAULT_FILE = "E:\\Projects\\mongodb-study\\examples\\out-street-test.osm";
     public static final String STREET = "Возз'єднання проспект";
 
     public static void main(String[] args) throws StorageException, RenderException {
         ModelRenderer mr = new ModelRenderer();
-        File output = new File("E:\\Projects\\mongodb-study\\examples\\out-street-test.osm");
 
+        File output = new File((args.length > 0) ? args[0] : DEFAULT_FILE);
         StreetHelper sh = new StreetHelper();
 
         Collection<Entity> streets = new HashSet<Entity>();
@@ -44,7 +46,7 @@ public class StreetExport {
         Datastore mongo = ds.getDatastore();
 
 //        List<Node> busStops = mongo.find(Node.class, "tags.highway", "bus_stop").limit(1).asList();
-        streets.addAll(mongo.find(Node.class, "tags.highway", "bus_stop").asList());
+//        streets.addAll(mongo.find(Node.class, "tags.highway", "bus_stop").asList());
 
         mr.buildOsm(streets, output);
     }
