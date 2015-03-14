@@ -1,0 +1,1 @@
+Some case studies for MongoDB. A few labs and little playing with API.
